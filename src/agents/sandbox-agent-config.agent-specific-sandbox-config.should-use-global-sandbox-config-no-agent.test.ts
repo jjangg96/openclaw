@@ -27,8 +27,8 @@ vi.mock("node:child_process", async (importOriginal) => {
         stderr?: Readable;
         on: (event: string, cb: (...args: unknown[]) => void) => void;
       };
-      child.stdout = new Readable({ read() {} });
-      child.stderr = new Readable({ read() {} });
+      child.stdout = new Readable({ read() { } });
+      child.stderr = new Readable({ read() { } });
 
       const dockerArgs = command === "docker" ? args : [];
       const shouldFailContainerInspect =
@@ -54,9 +54,9 @@ describe("Agent-specific sandbox config", () => {
 
   beforeEach(async () => {
     spawnCalls.length = 0;
-    previousStateDir = process.env.MOLTBOT_STATE_DIR;
-    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "moltbot-test-state-"));
-    process.env.MOLTBOT_STATE_DIR = tempStateDir;
+    previousStateDir = process.env.OPENCLAW_STATE_DIR;
+    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-test-state-"));
+    process.env.OPENCLAW_STATE_DIR = tempStateDir;
     vi.resetModules();
   });
 
@@ -65,9 +65,9 @@ describe("Agent-specific sandbox config", () => {
       await fs.rm(tempStateDir, { recursive: true, force: true });
     }
     if (previousStateDir === undefined) {
-      delete process.env.MOLTBOT_STATE_DIR;
+      delete process.env.OPENCLAW_STATE_DIR;
     } else {
-      process.env.MOLTBOT_STATE_DIR = previousStateDir;
+      process.env.OPENCLAW_STATE_DIR = previousStateDir;
     }
     tempStateDir = undefined;
   });
