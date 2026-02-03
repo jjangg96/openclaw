@@ -6,11 +6,9 @@ import {
   MessageReactionRemoveListener,
   PresenceUpdateListener,
 } from "@buape/carbon";
-
 import { danger } from "../../globals.js";
 import { formatDurationSeconds } from "../../infra/format-duration.js";
 import { enqueueSystemEvent } from "../../infra/system-events.js";
-import { setPresence } from "./presence-cache.js";
 import { createSubsystemLogger } from "../../logging/subsystem.js";
 import { resolveAgentRoute } from "../../routing/resolve-route.js";
 import {
@@ -23,6 +21,7 @@ import {
 import { formatDiscordReactionEmoji, formatDiscordUserTag } from "./format.js";
 import { resolveDiscordChannelInfo } from "./message-utils.js";
 import { resolveDiscordUserAllowed } from "./allow-list.js";
+import { setPresence } from "./presence-cache.js";
 
 const TRIGGER_DEBOUNCE_MS = 3000;
 const triggerDebounce = new Map<string, number>();
@@ -404,6 +403,7 @@ async function handleDiscordReactionEvent(params: {
       accountId: params.accountId,
       guildId: data.guild_id ?? undefined,
       peer: { kind: "channel", id: data.channel_id },
+      parentPeer: parentId ? { kind: "channel", id: parentId } : undefined,
     });
 
     // Check reaction trigger conditions (only for "added" action)
